@@ -16,12 +16,55 @@
 (setq use-package-verbose t)
 (use-package evil
   :ensure t
-  :config
-  (evil-mode 1)
-  ;; More configuration goes here
+  :init
+  (progn
+    ;; if we don't have this evil overwrites the cursor color
+    (setq evil-default-cursor t)
+
+    ;; leader shortcuts
+
+    ;; This has to be before we invoke evil-mode due to:
+    ;; https://github.com/cofi/evil-leader/issues/10
+    (use-package evil-leader
+      :init (global-evil-leader-mode)
+      :config
+      (progn
+	(evil-leader/set-leader "<SPC>") 
+	(setq evil-leader/in-all-states t)
+        ;; keyboard shortcuts
+        (evil-leader/set-key
+          "a" 'ag-project
+          "A" 'ag
+          "b" 'ido-switch-buffer
+          "c" 'mc/mark-next-like-this
+          "C" 'mc/mark-all-like-this
+          "e" 'er/expand-region
+          "E" 'mc/edit-lines
+          "fed" 'ido-find-file
+          "g" 'magit-status
+          "i" 'idomenu
+          "j" 'ace-jump-mode
+          "k" 'kill-buffer
+          "K" 'kill-this-buffer
+          "o" 'occur
+          "p" 'magit-find-file-completing-read
+          "r" 'recentf-ido-find-file
+          "s" 'ag-project
+          "t" 'bw-open-term
+          "T" 'eshell
+          "w" 'save-buffer
+          "x" 'smex
+          )))
+
+    ;; boot evil by default
+    (evil-mode 1))
   )
 
 (use-package paraedit
+  :ensure t
+  )
+
+(use-package dirtree
   :ensure t
   )
 
@@ -42,7 +85,16 @@
   (let ((evil-this-register ?0))
     (call-interactively 'evil-paste-after)))
 
-(define-define evil-visual-state-map "p" 'evil-paste-after-from-0)
+(define-key evil-visual-state-map "p" 'evil-paste-after-from-0)
+
+
+(use-package magit
+  :ensure t
+  :config
+  (define-key evil-normal-state-map "gc" 'evil-paste-after-from-0)
+  
+  
+  )
 
 
 
