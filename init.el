@@ -1,25 +1,25 @@
 ;; load emacs 24's package system. Add MELPA repository.
+
 (require 'package)
-(add-to-list
- 'package-archives
- ;; '("melpa" . "http://stable.melpa.org/packages/") ; many packages won't show if using stable
- '("melpa" . "http://melpa.milkbox.net/packages/")
- t)
+(push '("marmalade" . "http://marmalade-repo.org/packages/") package-archives)
+(push '("melpa" . "http://melpa.milkbox.net/packages/") package-archives)
 (package-initialize)
-
-
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+(require 'use-package)
+(setq use-package-always-ensure t)
+(load-theme 'deeper-blue)
 
-
-(setq use-package-verbose t)
+;; (setq use-package-verbose t)
 (use-package evil
   :ensure t
   :init
   (progn
     ;; if we don't have this evil overwrites the cursor color
     (setq evil-default-cursor t)
+    (setq evil-want-C-u-scroll t)
+
 
     ;; leader shortcuts
 
@@ -58,14 +58,24 @@
 
     ;; boot evil by default
     (evil-mode 1))
+  :config
+
   )
 
-(use-package paraedit
+(use-package paredit
   :ensure t
   )
 
 (use-package dirtree
   :ensure t
+  )
+(use-package rainbow-delimiters
+  :ensure t
+  :config
+
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'text-mode-hook #'rainbow-delimiters-mode)
+
   )
 
 
@@ -90,10 +100,48 @@
 (use-package magit
   :ensure t
   :config
-  (define-key evil-normal-state-map (kbd "gc") 'magit-commit)
+  ;; (define-key evil-normal-state-map (kbd "SPC gc") 'magit-commit) 
+  )
+
+(use-package powerline :ensure t
+  :init 
+  :config (progn
+	    (use-package airline-themes :ensure t
+			  :config
+			  (load-theme 'airline-cool) 
+			  )
+	    ))
   
-  
+(use-package tabbar :ensure t
+  :init 
+  :config
+  (tabbar-mode t)
   )
 
 
+(defun under-comment (ARG)
+  (interactive)
+  (comment-dwim ARG)
+  )
 
+(define-key evil-normal-state-map "_" 'comment-line)
+(define-key evil-visual-state-map "_" 'comment-dwim)
+
+
+
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("251348dcb797a6ea63bbfe3be4951728e085ac08eee83def071e4d2e3211acc3" default))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
