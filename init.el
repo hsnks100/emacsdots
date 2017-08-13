@@ -87,12 +87,10 @@
 
 (define-key evil-visual-state-map "p" 'evil-paste-after-from-0)
 
-
-
 (use-package magit
   :ensure t
   :config
-  (define-key evil-normal-state-map "gc" 'evil-paste-after-from-0)
+  (define-key evil-normal-state-map (kbd "gc") 'magit-commit)
   
   
   )
