@@ -11,6 +11,10 @@
 (setq use-package-always-ensure t)
 (load-theme 'deeper-blue)
 
+
+
+
+
 ;
 (use-package evil
   :ensure t
@@ -79,7 +83,7 @@
 
 
 
-(use-package magit
+(use-package evil-magit
   :ensure t
   :config
   ;; (define-key evil-normal-state-local-minor-mode (kbd "C-j") nil)
@@ -120,7 +124,10 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("251348dcb797a6ea63bbfe3be4951728e085ac08eee83def071e4d2e3211acc3" default))))
+    ("251348dcb797a6ea63bbfe3be4951728e085ac08eee83def071e4d2e3211acc3" default)))
+ '(package-selected-packages
+   (quote
+    (evil-magit use-package tabbar solarized-theme rainbow-delimiters popwin paredit magit evil-leader dirtree airline-themes))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
