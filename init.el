@@ -11,7 +11,7 @@
 (setq use-package-always-ensure t)
 (load-theme 'deeper-blue)
 
-;; (setq use-package-verbose t)
+;
 (use-package evil
   :ensure t
   :init
@@ -34,26 +34,7 @@
         ;; keyboard shortcuts
         (evil-leader/set-key
           "a" 'ag-project
-          "A" 'ag
-          "b" 'ido-switch-buffer
-          "c" 'mc/mark-next-like-this
-          "C" 'mc/mark-all-like-this
-          "e" 'er/expand-region
-          "E" 'mc/edit-lines
-          "fed" 'ido-find-file
-          "g" 'magit-status
-          "i" 'idomenu
-          "j" 'ace-jump-mode
-          "k" 'kill-buffer
-          "K" 'kill-this-buffer
-          "o" 'occur
-          "p" 'magit-find-file-completing-read
-          "r" 'recentf-ido-find-file
-          "s" 'ag-project
-          "t" 'bw-open-term
-          "T" 'eshell
-          "w" 'save-buffer
-          "x" 'smex
+          "gc" 'magit-commit
           )))
 
     ;; boot evil by default
@@ -95,12 +76,12 @@
   (let ((evil-this-register ?0))
     (call-interactively 'evil-paste-after)))
 
-(define-key evil-visual-state-map "p" 'evil-paste-after-from-0)
+
 
 (use-package magit
   :ensure t
   :config
-  ;; (define-key evil-normal-state-map (kbd "SPC gc") 'magit-commit) 
+  ;; (define-key evil-normal-state-local-minor-mode (kbd "C-j") nil)
   )
 
 (use-package powerline :ensure t
