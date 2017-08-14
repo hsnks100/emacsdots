@@ -1,3 +1,18 @@
+;;; ~/.emacs 에 다음을 수정 또는 추가하세요
+(custom-set-variables
+'(default-input-method "korean-hangul390")) ;; 세벌식 390
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("251348dcb797a6ea63bbfe3be4951728e085ac08eee83def071e4d2e3211acc3" default)))
+ '(package-selected-packages
+   (quote
+    (neotree evil-magit use-package tabbar solarized-theme rainbow-delimiters popwin paredit magit evil-leader dirtree airline-themes))))
+	;; 세벌식 390
 ;; load emacs 24's package system. Add MELPA repository.
 
 (require 'package)
@@ -9,13 +24,9 @@
   (package-install 'use-package))
 (require 'use-package)
 (setq use-package-always-ensure t)
-(load-theme 'deeper-blue)
+(load-theme 'deeper-blue) 
 
 
-
-
-
-;
 (use-package evil
   :ensure t
   :init
@@ -35,25 +46,37 @@
       (progn
 	(evil-leader/set-leader "<SPC>") 
 	(setq evil-leader/in-all-states t)
-        ;; keyboard shortcuts
-        (evil-leader/set-key
-          "a" 'ag-project
-          "gc" 'magit-commit
-          "gp" 'magit-push-current-to-pushremote
-          )))
+	;; keyboard shortcuts
+	(evil-leader/set-key
+	  "a" 'ag-project
+	  "gc" 'magit-commit
+	  "gp" 'magit-push-current-to-pushremote
+	  "gs" 'magit-status
+	  )))
 
     ;; boot evil by default
     (evil-mode 1))
   :config
-
-  )
+  ;; {{ make IME compatible with evil-mode 
+  ) 
 
 (use-package paredit
   :ensure t
   )
 
-(use-package dirtree
+(use-package neotree
   :ensure t
+  :config
+   (add-hook 'neotree-mode-hook
+	     (lambda ()
+	       (define-key evil-normal-state-local-map (kbd "TAB") 'neotree-enter)
+	       (define-key evil-normal-state-local-map (kbd "SPC") 'neotree-quick-look)
+	       (define-key evil-normal-state-local-map (kbd "q") 'neotree-hide)
+	       (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)))
+   (global-set-key [f8] 'neotree-toggle)
+
+
+
   )
 (use-package rainbow-delimiters
   :ensure t
@@ -112,25 +135,9 @@
 
 (define-key evil-normal-state-map "_" 'comment-line)
 (define-key evil-visual-state-map "_" 'comment-dwim)
+(define-key evil-normal-state-map (kbd "C-j") 'tabbar-backward-tab)
+(define-key evil-normal-state-map (kbd "C-k") 'tabbar-forward-tab)
+(define-key evil-normal-state-map (kbd "<f4>") 'dirtree)
 
 
 
-
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("251348dcb797a6ea63bbfe3be4951728e085ac08eee83def071e4d2e3211acc3" default)))
- '(package-selected-packages
-   (quote
-    (evil-magit use-package tabbar solarized-theme rainbow-delimiters popwin paredit magit evil-leader dirtree airline-themes))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
