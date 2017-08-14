@@ -35,6 +35,7 @@
         (evil-leader/set-key
           "a" 'ag-project
           "gc" 'magit-commit
+          "gp" 'magit-push-current-to-pushremote
           )))
 
     ;; boot evil by default
