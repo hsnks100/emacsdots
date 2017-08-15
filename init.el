@@ -1,7 +1,5 @@
 ;;; ~/.emacs 에 다음을 수정 또는 추가하세요
 (custom-set-variables
-'(default-input-method "korean-hangul390")) ;; 세벌식 390
-(custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
@@ -9,9 +7,12 @@
  '(custom-safe-themes
    (quote
     ("251348dcb797a6ea63bbfe3be4951728e085ac08eee83def071e4d2e3211acc3" default)))
+ '(default-input-method "korean-hangul390")
  '(package-selected-packages
    (quote
-    (neotree evil-magit use-package tabbar solarized-theme rainbow-delimiters popwin paredit magit evil-leader dirtree airline-themes))))
+    (auto-complete-config company-mode auto-complete neotree evil-magit use-package tabbar solarized-theme rainbow-delimiters popwin paredit magit evil-leader dirtree airline-themes))))
+ ;; 세벌식 390
+
 	;; 세벌식 390
 ;; load emacs 24's package system. Add MELPA repository.
 
@@ -132,6 +133,16 @@
   )
 
 
+
+(use-package auto-complete-config :ensure t
+  :init 
+  :config
+  (ac-config-default)
+  (define-key ac-complete-mode-map "\C-n" 'ac-next)
+  (define-key ac-complete-mode-map "\C-p" 'ac-previous)
+  )
+
+
 (defun under-comment (ARG)
   (interactive)
   (comment-dwim ARG)
@@ -148,4 +159,13 @@
 
 
 
+
+
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
 
