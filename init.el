@@ -52,6 +52,10 @@
 	  "gc" 'magit-commit
 	  "gp" 'magit-push-current-to-pushremote
 	  "gs" 'magit-status
+
+	  "d" 'kill-this-buffer
+	  "fed" (lambda() (interactive) (find-file "~/.emacs.d/init.el"))
+	  "feR" (lambda() (interactive) (load-file "~/.emacs.d/init.el"))
 	  )))
 
     ;; boot evil by default
@@ -138,6 +142,10 @@
 (define-key evil-normal-state-map (kbd "C-j") 'tabbar-backward-tab)
 (define-key evil-normal-state-map (kbd "C-k") 'tabbar-forward-tab)
 (define-key evil-normal-state-map (kbd "<f4>") 'dirtree)
+(setq scroll-step            1
+      scroll-conservatively  10000)
+(setq scroll-margin 10)
+
 
 
 
