@@ -10,23 +10,35 @@
  '(default-input-method "korean-hangul390")
  '(package-selected-packages
    (quote
-    (auto-complete-config company-mode auto-complete neotree evil-magit use-package tabbar solarized-theme rainbow-delimiters popwin paredit magit evil-leader dirtree airline-themes))))
+    (bison-mode auto-complete-config company-mode auto-complete neotree evil-magit use-package tabbar solarized-theme rainbow-delimiters popwin paredit magit evil-leader dirtree airline-themes))))
  ;; 세벌식 390
 
 	;; 세벌식 390
 ;; load emacs 24's package system. Add MELPA repository.
 
-(require 'package)
-(push '("marmalade" . "http://marmalade-repo.org/packages/") package-archives)
-(push '("melpa" . "http://melpa.milkbox.net/packages/") package-archives)
+
+
 (package-initialize)
+(add-to-list 'package-archives '("melpa stable" . "https://stable.melpa.org/packages/"))
+;;(add-to-list 'package-archives '("melpa china" . "http://elpa.emacs-china.org/melpa-stable/"))
+(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(require 'package)
+
 (unless (package-installed-p 'use-package)
-  (package-refresh-contents)
+  ;; (package-refresh-contents)
   (package-install 'use-package))
+
 (require 'use-package)
-(setq use-package-always-ensure t)
+;; (setq use-package-always-ensure t)
 (load-theme 'deeper-blue) 
 
+(global-linum-mode t)
+
+(use-package bison-mode
+  :ensure t
+  )
 
 (use-package evil
   :ensure t
@@ -130,8 +142,20 @@
   :init 
   :config
   (tabbar-mode t)
+   (setq tabbar-buffer-groups-function
+           (lambda ()
+            (list "All")))
   )
 
+(defun my-tabbar-buffer-groups () ;; customize to show all normal files in one group
+  "Returns the name of the tab group names the current buffer belongs to.
+ There are two groups: Emacs buffers (those whose name starts with '*', plus
+ dired buffers), and the rest.  This works at least with Emacs v24.2 using
+ tabbar.el v1.7."
+  (list (cond ((string-equal "*" (substring (buffer-name) 0 1)) "emacs")
+	      ((eq major-mode 'dired-mode) "emacs")
+	      (t "user"))))
+(setq tabbar-buffer-groups-function 'my-tabbar-buffer-groups)
 
 
 (use-package auto-complete-config :ensure t
@@ -150,8 +174,10 @@
 
 (define-key evil-normal-state-map "_" 'comment-line)
 (define-key evil-visual-state-map "_" 'comment-dwim)
-(define-key evil-normal-state-map (kbd "C-j") 'tabbar-backward-tab)
-(define-key evil-normal-state-map (kbd "C-k") 'tabbar-forward-tab)
+;; (define-key evil-normal-state-map (kbd "C-j") 'tabbar-backward-tab)
+;; (define-key evil-normal-state-map (kbd "C-k") 'tabbar-forward-tab)
+(global-set-key  (kbd "C-j") 'tabbar-backward-tab)
+(global-set-key  (kbd "C-k") 'tabbar-forward-tab)
 (define-key evil-normal-state-map (kbd "<f4>") 'dirtree)
 (setq scroll-step            1
       scroll-conservatively  10000)
@@ -159,7 +185,13 @@
 
 
 
+(defun perl-on-buffer ()
+  (interactive)
+  (shell-command-on-region (point-min) (point-max) "perl" "*Perl Output*")
+  (display-buffer "*Perl Output*"))
 
+(eval-after-load 'perl-mode
+  '(define-key perl-mode-map (kbd "C-c C-c") 'perl-on-buffer))
 
 
 (custom-set-faces
