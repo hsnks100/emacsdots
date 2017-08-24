@@ -15,7 +15,11 @@
 
 	;; 세벌식 390
 ;; load emacs 24's package system. Add MELPA repository.
-
+(defvar setup-mode nil)
+(if (member "-setup" 'argv)
+    (progn (setq setup-mode t)
+	   (message "emacs starting as package setup mode."))
+  nil)
 
 
 (package-initialize)
@@ -24,6 +28,9 @@
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+
+(if setup-mode
+    (package-refresh-contents) nil)
 (require 'package)
 
 (unless (package-installed-p 'use-package)
