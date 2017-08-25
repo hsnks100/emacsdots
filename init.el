@@ -36,8 +36,7 @@
 (modify-syntax-entry ?_ "w") 
 (global-linum-mode t)
 
-(use-package bison-mode
-  )
+(use-package bison-mode)
 
 (use-package evil
   :init
@@ -54,6 +53,26 @@
     (use-package evil-leader
       :init (global-evil-leader-mode)
       :config
+      (defun clean ()
+	(interactive)
+	(defvar foo)
+	(setq foo (concat "make clean"))
+	(compile foo)
+	;; (call-interactively 'compile)
+	;; compile
+	;; (compile nil)
+	;; (shell-command foo)
+	)
+      (defun build ()
+	(interactive)
+	(defvar foo)
+	(setq foo (concat "make"))
+	(compile foo)
+	;; (call-interactively 'compile)
+	;; compile
+	;; (compile nil)
+	;; (shell-command foo)
+	)
       (progn
 	(evil-leader/set-leader "<SPC>") 
 	(setq evil-leader/in-all-states t)
@@ -67,6 +86,8 @@
 	  "d" 'kill-this-buffer
 	  "fed" (lambda() (interactive) (find-file "~/.emacs.d/init.el"))
 	  "feR" (lambda() (interactive) (load-file "~/.emacs.d/init.el"))
+	  "bb" 'build
+	  "bc" 'clean
 	  )))
 
     ;; boot evil by default
@@ -172,7 +193,7 @@
 ;; (define-key evil-normal-state-map (kbd "C-k") 'tabbar-forward-tab)
 (global-set-key  (kbd "C-j") 'tabbar-backward-tab)
 (global-set-key  (kbd "C-k") 'tabbar-forward-tab)
-(define-key evil-normal-state-map (kbd "<f4>") 'dirtree)
+(define-key evil-normal-state-map (kbd "<f4>") 'neotree)
 (setq scroll-step            1
       scroll-conservatively  10000)
 (setq scroll-margin 10)
@@ -195,3 +216,8 @@
  ;; If there is more than one, they won't work right.
  )
 
+
+;; Run C programs directly from within emacs
+
+
+;; (global-set-key (kbd "C-<S-b>") 'build)
