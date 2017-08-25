@@ -15,11 +15,6 @@
 
 	;; 세벌식 390
 ;; load emacs 24's package system. Add MELPA repository.
-(defvar setup-mode nil)
-(if (member "-setup" 'argv)
-    (progn (setq setup-mode t)
-	   (message "emacs starting as package setup mode."))
-  nil)
 
 
 (package-initialize)
@@ -28,27 +23,23 @@
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-
-(if setup-mode
-    (package-refresh-contents) nil)
 (require 'package)
 
 (unless (package-installed-p 'use-package)
-  ;; (package-refresh-contents)
   (package-install 'use-package))
 
 (require 'use-package)
-;; (setq use-package-always-ensure t)
+(setq use-package-always-ensure nil)
+
 (load-theme 'deeper-blue) 
 
+(modify-syntax-entry ?_ "w") 
 (global-linum-mode t)
 
 (use-package bison-mode
-  :ensure t
   )
 
 (use-package evil
-  :ensure t
   :init
   (progn
     ;; if we don't have this evil overwrites the cursor color
@@ -85,11 +76,9 @@
   ) 
 
 (use-package paredit
-  :ensure t
   )
 
 (use-package neotree
-  :ensure t
   :config
    (add-hook 'neotree-mode-hook
 	     (lambda ()
@@ -103,7 +92,6 @@
 
   )
 (use-package rainbow-delimiters
-  :ensure t
   :config
 
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
@@ -128,24 +116,30 @@
   (let ((evil-this-register ?0))
     (call-interactively 'evil-paste-after)))
 
+(use-package auto-complete-config 
+  :init 
+  :config
+  (ac-config-default)
+  (define-key ac-complete-mode-map "\C-n" 'ac-next)
+  (define-key ac-complete-mode-map "\C-p" 'ac-previous)
+  )
 
 
 (use-package evil-magit
-  :ensure t
   :config
   ;; (define-key evil-normal-state-local-minor-mode (kbd "C-j") nil)
   )
 
-(use-package powerline :ensure t
+(use-package powerline
   :init 
   :config (progn
-	    (use-package airline-themes :ensure t
+	    (use-package airline-themes 
 			  :config
 			  (load-theme 'airline-cool) 
 			  )
 	    ))
   
-(use-package tabbar :ensure t
+(use-package tabbar 
   :init 
   :config
   (tabbar-mode t)
@@ -165,13 +159,6 @@
 (setq tabbar-buffer-groups-function 'my-tabbar-buffer-groups)
 
 
-(use-package auto-complete-config :ensure t
-  :init 
-  :config
-  (ac-config-default)
-  (define-key ac-complete-mode-map "\C-n" 'ac-next)
-  (define-key ac-complete-mode-map "\C-p" 'ac-previous)
-  )
 
 
 (defun under-comment (ARG)
