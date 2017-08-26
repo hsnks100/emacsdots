@@ -187,16 +187,27 @@
   (comment-dwim ARG)
   )
 
+(define-key evil-normal-state-map (kbd "<f4>") 'neotree)
+(defun insert-ret ()
+  (interactive)
+  (insert "\n")
+  )
+
+;; (define-key evil-normal-state-map (kbd "<S-return>") ((lambda() (interactive) (insert "\n"))))
+(define-key evil-normal-state-map (kbd "<S-return>") 'insert-ret)
+
 (define-key evil-normal-state-map "_" 'comment-line)
 (define-key evil-visual-state-map "_" 'comment-dwim)
 ;; (define-key evil-normal-state-map (kbd "C-j") 'tabbar-backward-tab)
 ;; (define-key evil-normal-state-map (kbd "C-k") 'tabbar-forward-tab)
 (global-set-key  (kbd "C-j") 'tabbar-backward-tab)
 (global-set-key  (kbd "C-k") 'tabbar-forward-tab)
-(define-key evil-normal-state-map (kbd "<f4>") 'neotree)
+;; (global-set-key  (kbd "S-<ret>") ((lambda()(insert "\n"))))
 (setq scroll-step            1
       scroll-conservatively  10000)
 (setq scroll-margin 10)
+
+
 
 
 
@@ -221,3 +232,6 @@
 
 
 ;; (global-set-key (kbd "C-<S-b>") 'build)
+(setq tab-width 4) ; or any other preferred value
+
+(setq-default indent-tabs-mode nil)
