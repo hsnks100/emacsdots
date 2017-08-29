@@ -78,7 +78,7 @@
 	(setq evil-leader/in-all-states t)
 	;; keyboard shortcuts
 	(evil-leader/set-key
-	  "a" 'ag-project
+	  "A" 'ff-find-other-file
 	  "gc" 'magit-commit
 	  "gp" 'magit-push-current-to-pushremote
 	  "gs" 'magit-status
@@ -106,7 +106,10 @@
 	       (define-key evil-normal-state-local-map (kbd "TAB") 'neotree-enter)
 	       (define-key evil-normal-state-local-map (kbd "SPC") 'neotree-quick-look)
 	       (define-key evil-normal-state-local-map (kbd "q") 'neotree-hide)
-	       (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)))
+	       (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)
+	       (define-key evil-normal-state-local-map (kbd "r") 'neotree-refresh)
+	       
+             ))
    (global-set-key [f8] 'neotree-toggle)
 
 
@@ -255,3 +258,4 @@
 		   indent-level 4
 		   c-basic-offset 4)))
 
+(setq x-select-enable-clipboard nil)
