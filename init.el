@@ -10,7 +10,7 @@
  '(default-input-method "korean-hangul390")
  '(package-selected-packages
    (quote
-    (bison-mode auto-complete-config company-mode auto-complete neotree evil-magit use-package tabbar solarized-theme rainbow-delimiters popwin paredit magit evil-leader dirtree airline-themes))))
+    (cmake-ide sr-speedbar bison-mode auto-complete-config company-mode auto-complete neotree evil-magit use-package tabbar solarized-theme rainbow-delimiters popwin paredit magit evil-leader dirtree airline-themes))))
  ;; 세벌식 390
 
 	;; 세벌식 390
@@ -169,6 +169,16 @@
             (list "All")))
   )
 
+(use-package sr-speedbar
+  :init
+  :config
+  (speedbar-add-supported-extension ".y")
+
+  
+  )
+(use-package cmake-ide
+  :config
+  (cmake-ide-setup))
 (defun my-tabbar-buffer-groups () ;; customize to show all normal files in one group
   "Returns the name of the tab group names the current buffer belongs to.
  There are two groups: Emacs buffers (those whose name starts with '*', plus
@@ -232,6 +242,16 @@
 
 
 ;; (global-set-key (kbd "C-<S-b>") 'build)
-(setq tab-width 4) ; or any other preferred value
-
+(setq c-default-style "k&r") 
 (setq-default indent-tabs-mode nil)
+(global-auto-revert-mode t)
+
+
+(add-hook 'c-mode-common-hook
+	  '(lambda ()
+         
+	     (setq tab-width 4
+		   indent-tabs-mode nil
+		   indent-level 4
+		   c-basic-offset 4)))
+
