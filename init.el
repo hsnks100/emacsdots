@@ -1,16 +1,5 @@
+(setq use-package-always-ensure t)
 ;;; ~/.emacs 에 다음을 수정 또는 추가하세요
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("251348dcb797a6ea63bbfe3be4951728e085ac08eee83def071e4d2e3211acc3" default)))
- '(default-input-method "korean-hangul390")
- '(package-selected-packages
-   (quote
-    (cmake-ide sr-speedbar bison-mode auto-complete-config company-mode auto-complete neotree evil-magit use-package tabbar solarized-theme rainbow-delimiters popwin paredit magit evil-leader dirtree airline-themes))))
  ;; 세벌식 390
 
 	;; 세벌식 390
@@ -29,7 +18,6 @@
   (package-install 'use-package))
 
 (require 'use-package)
-(setq use-package-always-ensure nil)
 
 (load-theme 'deeper-blue) 
 
@@ -140,7 +128,7 @@
   (let ((evil-this-register ?0))
     (call-interactively 'evil-paste-after)))
 
-(use-package auto-complete-config 
+(use-package ac-helm
   :init 
   :config
   (ac-config-default)
@@ -259,3 +247,44 @@
 		   c-basic-offset 4)))
 
 (setq x-select-enable-clipboard nil)
+
+
+
+(use-package helm
+  :diminish helm-mode
+  :init
+  (progn
+    (require 'helm-config)
+    (setq helm-candidate-number-limit 100)
+    ;; From https://gist.github.com/antifuchs/9238468
+    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+          helm-input-idle-delay 0.01  ; this actually updates things
+                                        ; reeeelatively quickly.
+          helm-yas-display-key-on-candidate t
+          helm-quick-update t
+          helm-M-x-requires-pattern nil
+          helm-ff-skip-boring-files t)
+    (helm-mode)
+    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; 
+    (define-key helm-map (kbd "M-x") 'helm-M-x)
+    (define-key helm-map (kbd "C-x C-b") 'helm-buffers-list)
+
+
+
+    )
+  :config
+  
+
+    )
+(ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("251348dcb797a6ea63bbfe3be4951728e085ac08eee83def071e4d2e3211acc3" default)))
+ '(inhibit-startup-screen t))
+
