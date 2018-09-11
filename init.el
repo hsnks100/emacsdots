@@ -1,31 +1,37 @@
+(setq inhibit-startup-message t)
+(setq initial-scratch-message "")
+(set-face-attribute 'default nil :height 160)
+(menu-bar-mode -1) 
+(toggle-scroll-bar 1) 
+(tool-bar-mode -1) 
 (setq use-package-always-ensure t)
-;;; ~/.emacs 에 다음을 수정 또는 추가하세요
- ;; 세벌식 390
-
-	;; 세벌식 390
-;; load emacs 24's package system. Add MELPA repository.
-
 
 (package-initialize)
 (add-to-list 'package-archives '("melpa stable" . "https://stable.melpa.org/packages/"))
-;;(add-to-list 'package-archives '("melpa china" . "http://elpa.emacs-china.org/melpa-stable/"))
+(add-to-list 'package-archives '("melpa china" . "http://elpa.emacs-china.org/melpa-stable/"))
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/")) 
 (require 'package)
 
+(use-package alect-theme :init :config)
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
 (require 'use-package)
 
-(load-theme 'deeper-blue) 
-
-(modify-syntax-entry ?_ "w") 
-(global-linum-mode t)
-
-(use-package bison-mode)
-
+(load-theme 'alect-light-alt t)
+;; (load-theme 'deeper-blue) 
+(set-language-environment "Korean")
+(setq default-input-method "korean-hangul390") 
+(setq default-input-method "korean-hangul3f") 
+(prefer-coding-system 'utf-8)
+(global-set-key (kbd "<Multi_key>") 'toggle-input-method) 
+(defun under-comment (ARG)
+  (interactive)
+  (comment-dwim ARG)
+  )
+;; (modify-syntax-entry ?_ "w") 
 (use-package evil
   :init
   (progn
@@ -61,21 +67,23 @@
 	;; (compile nil)
 	;; (shell-command foo)
 	)
+ 
       (progn
-	(evil-leader/set-leader "<SPC>") 
+	(evil-leader/set-leader "\\") 
 	(setq evil-leader/in-all-states t)
 	;; keyboard shortcuts
 	(evil-leader/set-key
+	  ;; "g" 'cscope-find-global-definition-no-prompting
+	  "g" 'cscope-find-this-symbol
 	  "A" 'ff-find-other-file
-	  "gc" 'magit-commit
-	  "gp" 'magit-push-current-to-pushremote
-	  "gs" 'magit-status
-
 	  "d" 'kill-this-buffer
 	  "fed" (lambda() (interactive) (find-file "~/.emacs.d/init.el"))
 	  "feR" (lambda() (interactive) (load-file "~/.emacs.d/init.el"))
 	  "bb" 'build
 	  "bc" 'clean
+	  "e" 'cscope-find-egrep-pattern
+	  "c" 'cscope-find-called-functions
+	  
 	  )))
 
     ;; boot evil by default
@@ -83,10 +91,6 @@
   :config
   ;; {{ make IME compatible with evil-mode 
   ) 
-
-(use-package paredit
-  )
-
 (use-package neotree
   :config
    (add-hook 'neotree-mode-hook
@@ -101,126 +105,47 @@
    (global-set-key [f8] 'neotree-toggle)
 
 
-
-  )
-(use-package rainbow-delimiters
-  :config
-
-  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-  (add-hook 'text-mode-hook #'rainbow-delimiters-mode)
-
   )
 
-
-(evil-define-operator evil-delete-char-without-register (beg end type reg)
-  "delete character without yanking unless in visual mode"
-  :motion evil-forward-char
-  (interactive "<R><y>")
-  (if (evil-visual-state-p)
-    (evil-delete beg end type reg)
-    (evil-delete beg end type ?_)))
-
-
-(define-key evil-normal-state-map (kbd "x") 'evil-delete-char-without-register) 
-
-(defun evil-paste-after-from-0 ()
-  (interactive)
-  (let ((evil-this-register ?0))
-    (call-interactively 'evil-paste-after)))
-
-(use-package ac-helm
-  :init 
-  :config
-  (ac-config-default)
-  (define-key ac-complete-mode-map "\C-n" 'ac-next)
-  (define-key ac-complete-mode-map "\C-p" 'ac-previous)
-  )
-
-
-(use-package evil-magit
-  :config
-  ;; (define-key evil-normal-state-local-minor-mode (kbd "C-j") nil)
-  )
-
+(use-package xcscope     ;; see ~/.emacs.d/elpa/xcscope-readme.txt
+  :ensure xcscope
+  :init (cscope-setup))
 (use-package powerline
   :init 
   :config (progn
 	    (use-package airline-themes 
 			  :config
-			  (load-theme 'airline-cool) 
+			  ;; (load-theme 'airline-cool) 
 			  )
 	    ))
-  
 (use-package tabbar 
   :init 
   :config
-  (tabbar-mode t)
    (setq tabbar-buffer-groups-function
            (lambda ()
             (list "All")))
   )
 
-(use-package sr-speedbar
-  :init
-  :config
-  (speedbar-add-supported-extension ".y")
 
-  
-  )
-(use-package cmake-ide
-  :config
-  (cmake-ide-setup))
-(defun my-tabbar-buffer-groups () ;; customize to show all normal files in one group
-  "Returns the name of the tab group names the current buffer belongs to.
- There are two groups: Emacs buffers (those whose name starts with '*', plus
- dired buffers), and the rest.  This works at least with Emacs v24.2 using
- tabbar.el v1.7."
-  (list (cond ((string-equal "*" (substring (buffer-name) 0 1)) "emacs")
-	      ((eq major-mode 'dired-mode) "emacs")
-	      (t "user"))))
-(setq tabbar-buffer-groups-function 'my-tabbar-buffer-groups)
-
-
-
-
-(defun under-comment (ARG)
-  (interactive)
-  (comment-dwim ARG)
-  )
-
-(define-key evil-normal-state-map (kbd "<f4>") 'neotree)
-(defun insert-ret ()
-  (interactive)
-  (insert "\n")
-  )
-
-;; (define-key evil-normal-state-map (kbd "<S-return>") ((lambda() (interactive) (insert "\n"))))
-(define-key evil-normal-state-map (kbd "<S-return>") 'insert-ret)
-
-(define-key evil-normal-state-map "_" 'comment-line)
-(define-key evil-visual-state-map "_" 'comment-dwim)
-;; (define-key evil-normal-state-map (kbd "C-j") 'tabbar-backward-tab)
-;; (define-key evil-normal-state-map (kbd "C-k") 'tabbar-forward-tab)
-(global-set-key  (kbd "C-j") 'tabbar-backward-tab)
-(global-set-key  (kbd "C-k") 'tabbar-forward-tab)
-;; (global-set-key  (kbd "S-<ret>") ((lambda()(insert "\n"))))
-(setq scroll-step            1
-      scroll-conservatively  10000)
-(setq scroll-margin 10)
-
-
-
-
-
-(defun perl-on-buffer ()
-  (interactive)
-  (shell-command-on-region (point-min) (point-max) "perl" "*Perl Output*")
-  (display-buffer "*Perl Output*"))
-
-(eval-after-load 'perl-mode
-  '(define-key perl-mode-map (kbd "C-c C-c") 'perl-on-buffer))
-
-
+;; (use-package abyss-theme :init :config)
+;; (use-package dracula-theme :init :config)
+;; provide the default key binding 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("7153b82e50b6f7452b4519097f880d968a6eaf6f6ef38cc45a144958e553fbc6" "b59d7adea7873d58160d368d42828e7ac670340f11f36f67fa8071dbf957236a" "d8dc153c58354d612b2576fea87fe676a3a5d43bcc71170c62ddde4a1ad9e1fb" "aaffceb9b0f539b6ad6becb8e96a04f2140c8faa1de8039a343a4f1e009174fb" "251348dcb797a6ea63bbfe3be4951728e085ac08eee83def071e4d2e3211acc3" default)))
+ '(global-linum-mode t)
+ '(line-number-mode nil)
+ '(package-selected-packages
+   (quote
+    (alect-theme alect-themes abyss-theme dracula-theme tabbar airline-themes powerline use-package neotree evil-leader)))
+ '(scroll-conservatively 1000)
+ '(scroll-margin 3)
+ '(tabbar-mode t nil (tabbar)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -229,62 +154,34 @@
  )
 
 
-;; Run C programs directly from within emacs
 
-
-;; (global-set-key (kbd "C-<S-b>") 'build)
-(setq c-default-style "k&r") 
-(setq-default indent-tabs-mode nil)
-(global-auto-revert-mode t)
-
-
-(add-hook 'c-mode-common-hook
-	  '(lambda ()
-         
-	     (setq tab-width 4
-		   indent-tabs-mode nil
-		   indent-level 4
-		   c-basic-offset 4)))
-
-(setq x-select-enable-clipboard nil)
+(define-key evil-normal-state-map (kbd "[") 'evil-scroll-up)
+(define-key evil-normal-state-map (kbd "]") 'evil-scroll-down)
+(define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
+(define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
+(define-key evil-normal-state-map (kbd "<up>") 'evil-window-increase-height)
+(define-key evil-normal-state-map (kbd "<down>") 'evil-window-decrease-height)
+(define-key evil-normal-state-map "_" 'comment-line)
+(define-key evil-visual-state-map "_" 'comment-dwim)
+(global-set-key  (kbd "C-k") 'tabbar-backward-tab)
+(global-set-key  (kbd "C-j") 'tabbar-forward-tab)
 
 
 
-(use-package helm
-  :diminish helm-mode
-  :init
-  (progn
-    (require 'helm-config)
-    (setq helm-candidate-number-limit 100)
-    ;; From https://gist.github.com/antifuchs/9238468
-    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
-          helm-input-idle-delay 0.01  ; this actually updates things
-                                        ; reeeelatively quickly.
-          helm-yas-display-key-on-candidate t
-          helm-quick-update t
-          helm-M-x-requires-pattern nil
-          helm-ff-skip-boring-files t)
-    (helm-mode)
-    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; 
-    (define-key helm-map (kbd "M-x") 'helm-M-x)
-    (define-key helm-map (kbd "C-x C-b") 'helm-buffers-list)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; (define-key cscope-list-entry-keymap (kbd "<return>") 'cscope-select-entry-one-window)
 
+ (defun my-cscope-self-mode-hook()
+   ;; (interactive)
+(define-key cscope-list-entry-keymap (kbd "<return>") 'cscope-select-entry-one-window)
+)
+;;   (local-set-key "o"   'cscope-select-entry-other-window)
+;;   (local-set-key (kbd "<RET>") 'cscope-select-entry-one-window)
+;;   )
+(add-hook 'cscope-list-entry-hook 'my-cscope-self-mode-hook)
+(add-hook 'c-mode-hook 'global-linum-mode)
+(add-hook 'c-mode-hook 'tabbar-mode)
+ 
 
-    )
-  :config
-  
-
-    )
-(ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("251348dcb797a6ea63bbfe3be4951728e085ac08eee83def071e4d2e3211acc3" default)))
- '(inhibit-startup-screen t))
 
