@@ -253,3 +253,7 @@
  '(package-selected-packages
    (quote
     (auto-complete helm tabbar powerline xcscope company neotree evil alect-themes use-package))))
+
+
+;; alias e="emacsclient -q -n -c"
+;; alias et="emacsclient -q -t"
