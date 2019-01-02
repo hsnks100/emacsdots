@@ -9,6 +9,7 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/")) 
 (package-initialize)
 
+
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
@@ -17,12 +18,26 @@
              :ensure t 
              :init :config)
 
+
+
 (use-package dracula-theme
              :ensure t 
              :init
              :config
              (load-theme 'dracula t)
              )
+(use-package atom-one-dark-theme
+             :ensure t 
+             :init
+             :config
+             ;; (load-theme 'atom-one-dark t)
+             )
+
+(use-package modern-cpp-font-lock
+  :ensure t
+  :config
+  (modern-c++-font-lock-global-mode t)
+  )
 ;; (load-theme 'alect-light-alt t)
 ;(load-theme 'dracula t)
 ;; (load-theme 'deeper-blue) 
@@ -54,7 +69,7 @@
              (setq tabbar-buffer-groups-function
                    (lambda ()
                      (list "All")))
-             (setq *tabbar-ignore-buffers* '("*Help*" ".bbdb" "diary"))
+             ;; (setq *tabbar-ignore-buffers* '("*Help*" ".bbdb" "diary"))
              (tabbar-mode)
              )
 
@@ -86,12 +101,8 @@
 ;; (use-package abyss-theme :init :config)
 ;; (use-package dracula-theme :init :config)
 ;; provide the default key binding 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
+
 
 
 
@@ -102,6 +113,10 @@
                                         (local-unset-key (kbd "C-j"))
                                         ))
 
+                                        
+;; (add-hook 'completion-list-mode-hook (lambda()
+;;                                        (local-set-key (kbd "<tab>" 'next-completion))
+;;                                         ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; (define-key cscope-list-entry-keymap (kbd "<return>") 'cscope-select-entry-one-window)
@@ -137,7 +152,7 @@
 (setq inhibit-startup-message t)
 (setq initial-scratch-message "")
 (set-face-attribute 'default nil :height 160)
-(menu-bar-mode -1) 
+(menu-bar-mode 1) 
 (toggle-scroll-bar 1) 
 (tool-bar-mode -1) 
 (global-auto-revert-mode t)
@@ -190,7 +205,7 @@
                               ;; keyboard shortcuts
                               (evil-leader/set-key
                                 ;; "g" 'cscope-find-global-definition-no-prompting
-                                "g" 'cscope-find-this-symbol
+                                "g" 'cscope-find-global-definition-no-prompting
                                 "A" 'ff-find-other-file
                                 "d" 'kill-this-buffer
                                 "fed" (lambda() (interactive) (find-file "~/.emacs.d/init.el"))
@@ -236,9 +251,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("aaffceb9b0f539b6ad6becb8e96a04f2140c8faa1de8039a343a4f1e009174fb" default)))
+ '(global-linum-mode t)
  '(package-selected-packages
    (quote
-    (dracula-theme auto-complete helm tabbar powerline xcscope company neotree evil alect-themes use-package))))
+    (modern-cpp-font-lock highlight-function-calls atom-theme dracula-theme auto-complete helm tabbar powerline xcscope company neotree evil alect-themes use-package))))
 
 
 ;; alias e="emacsclient -q -n -c"
@@ -266,9 +285,45 @@
 (global-set-key (kbd "C-<down>") 'evil-window-decrease-height)
 (global-set-key (kbd "C-<right>") 'evil-window-increase-width)
 (global-set-key (kbd "C-<left>") 'evil-window-decrease-width)
+
+
+
 (define-key evil-normal-state-map ";a" 'ff-find-other-file)
+(define-key evil-insert-state-map "\C-n" 'evil-complete-next)
+(define-key evil-insert-state-map "\C-p" 'evil-complete-previous)
+(define-key evil-insert-state-map "\C-x\C-n" 'evil-complete-next-line)
+(define-key evil-insert-state-map "\C-x\C-p" 'evil-complete-previous-line)
+
 ;; (scroll-margin 3)
 
 (setq scroll-margin 3
       scroll-conservatively 10000
       scroll-preserve-screen-position 1)
+(setq split-width-threshold 2)
+
+(set-default-font "Ubuntu Mono")
+;; (set-default-font "Inconsolata Bold")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(font-lock-add-keywords
+ 'c++-mode
+ '(("\\<\\(\\sw+\\) ?(" 1 'font-lock-function-name-face)))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
