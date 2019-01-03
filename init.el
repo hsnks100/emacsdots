@@ -1,4 +1,5 @@
 ;; (add-hook 'after-init-hook 'global-color-identifiers-mode)
+
 ; from enberg on #emacs
 
 (require 'package)
@@ -6,7 +7,7 @@
 (add-to-list 'package-archives '("melpa china" . "http://elpa.emacs-china.org/melpa-stable/"))
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/")) 
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
 
@@ -14,57 +15,91 @@
   (package-install 'use-package))
 
 (require 'use-package)
-(use-package alect-themes 
-             :ensure t 
+(use-package alect-themes
+             :ensure t
              :init :config)
 
-
-
-(use-package dracula-theme
-             :ensure t 
-             :init
-             :config
-             (load-theme 'dracula t)
+(use-package highlight-numbers
+             :ensure t
+             :init :config
+             (highlight-numbers-mode t)
              )
 (use-package atom-one-dark-theme
-             :ensure t 
+             :ensure t
              :init
              :config
              ;; (load-theme 'atom-one-dark t)
              )
 
+
+
+(use-package dracula-theme
+             :ensure t
+             :init
+             :config
+             (load-theme 'dracula t)
+             )
 (use-package modern-cpp-font-lock
   :ensure t
   :config
   (modern-c++-font-lock-global-mode t)
+  (font-lock-add-keywords
+   'c++-mode
+   '(("\\<\\(\\sw+\\) ?(" 1 'font-lock-function-name-face)))
   )
 ;; (load-theme 'alect-light-alt t)
 ;(load-theme 'dracula t)
-;; (load-theme 'deeper-blue) 
+;; (load-theme 'deeper-blue)
 ;; (set-language-environment "Korean")
+(use-package company
+  :ensure t
+  :init
+  (add-hook 'after-init-hook 'global-company-mode)
+  :config
+  (setq company-idle-delay 0)
+  (setq company-show-numbers "on")
+  (use-package rtags :ensure t :pin melpa
+    :config
+    (setq rtags-autostart-diagnostics nil)
+    (setq rtags-completions-enabled t)
+    (push 'company-rtags company-backends)
+    (add-hook 'c-mode-hook 'rtags-start-process-unless-running)
+    (add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
+    (add-hook 'objc-mode-hook 'rtags-start-process-unless-running)
+    (use-package company-rtags
+      :ensure t
+      :init
+      )
+    )
+  )
+(use-package dash
+  :ensure t
+  :init
+  )
+
+(use-package cmake-ide :ensure t :pin melpa
+  :config
+  (cmake-ide-setup)
+  )
 
 
-(use-package company;; see ~/.emacs.d/elpa/xcscope-readme.txt
-             :ensure t
-             :init
-             )
 (use-package xcscope     ;; see ~/.emacs.d/elpa/xcscope-readme.txt
              :ensure t
              :init
              (cscope-setup))
 (use-package powerline
              :ensure t
-             :init 
+             :init
              :config (progn
-                       (use-package airline-themes 
+                       (use-package airline-themes
                          :ensure t
                                     :config
-                                    ;; (load-theme 'airline-cool) 
+                                    ;; (load-theme 'airline-cool)
                                     )
                        ))
-(use-package tabbar 
+(use-package tabbar
              :ensure t
-             :init 
+             :init
              :config
              (setq tabbar-buffer-groups-function
                    (lambda ()
@@ -74,33 +109,33 @@
              )
 
 
-(use-package helm 
+(use-package helm
              :ensure t
-             :init 
+             :init
              (use-package helm-swoop
                :ensure t
-                          :init 
+                          :init
                           :config
                           )
              :config
              )
-(use-package auto-complete 
-             :ensure t
-             :init 
-             :config
-             (ac-config-default) 
-             (define-key ac-complete-mode-map "\C-n" 'ac-next)
-             (define-key ac-complete-mode-map "\C-p" 'ac-previous)
-             (setq ac-auto-show-menu    0.2)
-             (setq ac-delay             0.2)
-             (setq ac-menu-height       20)
-             (setq ac-auto-start t)
-             (setq ac-show-menu-immediately-on-auto-complete t)
-             )
+;; (use-package auto-complete
+;;              :ensure t
+;;              :init
+;;              :config
+;;              (ac-config-default)
+;;              (define-key ac-complete-mode-map "\C-n" 'ac-next)
+;;              (define-key ac-complete-mode-map "\C-p" 'ac-previous)
+;;              (setq ac-auto-show-menu    0.2)
+;;              (setq ac-delay             0.2)
+;;              (setq ac-menu-height       20)
+;;              (setq ac-auto-start t)
+;;              (setq ac-show-menu-immediately-on-auto-complete t)
+;;              )
 
 ;; (use-package abyss-theme :init :config)
 ;; (use-package dracula-theme :init :config)
-;; provide the default key binding 
+;; provide the default key binding
 
 
 
@@ -109,11 +144,11 @@
 
 
 
-(add-hook 'lisp-interaction-mode-hook (lambda() 
+(add-hook 'lisp-interaction-mode-hook (lambda()
                                         (local-unset-key (kbd "C-j"))
                                         ))
 
-                                        
+
 ;; (add-hook 'completion-list-mode-hook (lambda()
 ;;                                        (local-set-key (kbd "<tab>" 'next-completion))
 ;;                                         ))
@@ -130,10 +165,10 @@
 ;;   )
 (add-hook 'cscope-list-entry-hook 'my-cscope-self-mode-hook)
 (add-hook 'c-mode-hook 'global-linum-mode)
-(add-hook 'c-mode-hook 'tabbar-mode) 
+(add-hook 'c-mode-hook 'tabbar-mode)
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (setq-default c-basic-offset 4)
-(setq-default indent-tabs-mode nil) 
+(setq-default indent-tabs-mode nil)
 
 (add-hook 'after-change-major-mode-hook
           (lambda ()
@@ -152,14 +187,14 @@
 (setq inhibit-startup-message t)
 (setq initial-scratch-message "")
 (set-face-attribute 'default nil :height 160)
-(menu-bar-mode 1) 
-(toggle-scroll-bar 1) 
-(tool-bar-mode -1) 
+(menu-bar-mode 1)
+(toggle-scroll-bar 1)
+(tool-bar-mode -1)
 (global-auto-revert-mode t)
 (setq use-package-always-ensure t)
-(setq default-input-method "korean-hangul390") 
+(setq default-input-method "korean-hangul390")
 (prefer-coding-system 'utf-8)
-(global-set-key (kbd "<Multi_key>") 'toggle-input-method) 
+(global-set-key (kbd "<Multi_key>") 'toggle-input-method)
 (defun under-comment (ARG)
   (interactive)
   (comment-dwim ARG))
@@ -200,7 +235,7 @@
                               )
 
                             (progn
-                              (evil-leader/set-leader "\\") 
+                              (evil-leader/set-leader "\\")
                               (setq evil-leader/in-all-states t)
                               ;; keyboard shortcuts
                               (evil-leader/set-key
@@ -220,12 +255,12 @@
                ;; boot evil by default
                (evil-mode 1))
              :config
-             ;; {{ make IME compatible with evil-mode 
-             ) 
+             ;; {{ make IME compatible with evil-mode
+             )
 (use-package neotree
   :ensure t
   :config
-  (progn 
+  (progn
     (global-set-key [f8] 'neotree-refresh)
     (add-hook 'neotree-mode-hook
               (lambda ()
@@ -242,7 +277,7 @@
                 (define-key evil-normal-state-local-map (kbd "md") 'neotree-delete-node)
                 (define-key evil-normal-state-local-map (kbd "H") 'neotree-hidden-file-toggle)))
     )
-  
+
 
 
   )
@@ -257,7 +292,13 @@
  '(global-linum-mode t)
  '(package-selected-packages
    (quote
-    (modern-cpp-font-lock highlight-function-calls atom-theme dracula-theme auto-complete helm tabbar powerline xcscope company neotree evil alect-themes use-package))))
+    (company-rtags dash cmake-ide cmake-mode highlight-numbers modern-cpp-font-lock highlight-function-calls atom-theme dracula-theme auto-complete helm tabbar powerline xcscope company neotree evil alect-themes use-package)))
+ '(safe-local-variable-values
+   (quote
+    ((company-clang-arguments "-I/home/ksoo/hisdk/mpp/sample/ballbot/opencv/include" "-I/home/ksoo/hisdk/mpp/sample/ballbot/hiboost63/include" "-I/home/ksoo/hisdk/mpp/sample/common" "-I/home/ksoo/hisdk/mpp/include" "-I/home/ksoo/hisdk/mpp/sample/ballbot")
+     (company-clang-arguments "-I/home/ksoo/hisdk/mpp/sample/ballbot/opencv/include" "-I/home/ksoo/hisdk/mpp/sample/ballbot/hiboost63/include" "-I/home/ksoo/hisdk/mpp/sample/common" "-I/home/ksoo/hisdk/mpp/include")
+     (company-clang-arguments "-I/home/<user>/hisdk/mpp/sample/ballbot/opencv/include" "-I/home/<user>/hisdk/mpp/sample/ballbot/hiboost63/include" "-I/home/<user>/hisdk/mpp/sample/common" "-I/home/<user>/hisdk/mpp/include")
+     (company-clang-arguments "-I/home/<user>/hisdk/mpp/sample/ballbot/opencv/include" "-I/home/<user>/hisdk/mpp/sample/ballbot/hiboost63/include" "-I/home/<user>/hisdk/mpp/sample/common")))))
 
 
 ;; alias e="emacsclient -q -n -c"
@@ -268,8 +309,13 @@
 ;; (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
 ;; (define-key evil-normal-state-map (kbd "<up>") 'evil-window-increase-height)
 ;; (define-key evil-normal-state-map (kbd "<down>") 'evil-window-decrease-height)
+(define-key evil-normal-state-map (kbd "C-.") 'rtags-find-symbol-at-point)
+(define-key evil-normal-state-map (kbd "C-,") 'rtags-find-references-at-point)
+(define-key evil-normal-state-map (kbd "C-t") 'rtags-location-stack-back)
 (define-key evil-normal-state-map (kbd "[") 'evil-scroll-up)
 (define-key evil-normal-state-map (kbd "]") 'evil-scroll-down)
+(define-key evil-normal-state-map (kbd "0") 'evil-first-non-blank)
+(define-key evil-visual-state-map (kbd "0") 'evil-first-non-blank)
 (define-key evil-normal-state-map "_" 'comment-line)
 (define-key evil-visual-state-map "_" 'comment-dwim)
 (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
@@ -280,7 +326,7 @@
 (global-set-key  (kbd "C-k") 'tabbar-backward-tab)
 (global-set-key  (kbd "C-j") 'tabbar-forward-tab)
 (global-set-key (kbd "C-h") 'evil-window-left)
-(global-set-key (kbd "C-l") 'evil-window-right) 
+(global-set-key (kbd "C-l") 'evil-window-right)
 (global-set-key (kbd "C-<up>") 'evil-window-increase-height)
 (global-set-key (kbd "C-<down>") 'evil-window-decrease-height)
 (global-set-key (kbd "C-<right>") 'evil-window-increase-width)
@@ -289,10 +335,10 @@
 
 
 (define-key evil-normal-state-map ";a" 'ff-find-other-file)
-(define-key evil-insert-state-map "\C-n" 'evil-complete-next)
-(define-key evil-insert-state-map "\C-p" 'evil-complete-previous)
-(define-key evil-insert-state-map "\C-x\C-n" 'evil-complete-next-line)
-(define-key evil-insert-state-map "\C-x\C-p" 'evil-complete-previous-line)
+;; (define-key evil-insert-state-map "\C-n" 'evil-complete-next)
+;; (define-key evil-insert-state-map "\C-p" 'evil-complete-previous)
+;; (define-key evil-insert-state-map "\C-x\C-n" 'evil-complete-next-line)
+;; (define-key evil-insert-state-map "\C-x\C-p" 'evil-complete-previous-line)
 
 ;; (scroll-margin 3)
 
@@ -301,8 +347,12 @@
       scroll-preserve-screen-position 1)
 (setq split-width-threshold 2)
 
-(set-default-font "Ubuntu Mono")
-;; (set-default-font "Inconsolata Bold")
+(set-default-font "Ubuntu Mono Bold")
+;; (set-default-font "Inconsolata")
+
+(defun nuke_traling ()
+  (add-hook 'before-save-hook #'delete-trailing-whitespace nil t))
+(add-hook 'prog-mode-hook #'nuke_traling)
 
 
 
@@ -315,11 +365,6 @@
 
 
 
-
-
-(font-lock-add-keywords
- 'c++-mode
- '(("\\<\\(\\sw+\\) ?(" 1 'font-lock-function-name-face)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -327,3 +372,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'set-goal-column 'disabled nil)
