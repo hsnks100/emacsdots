@@ -15,29 +15,31 @@
   (package-install 'use-package))
 
 (require 'use-package)
-(use-package alect-themes
-             :ensure t
-             :init :config)
 
 (use-package highlight-numbers
              :ensure t
              :init :config
              (highlight-numbers-mode t)
              )
+
+
+;; (use-package alect-themes
+;;              :ensure t
+;;              :init :config
+;;              (load-theme 'alect-dark t)
+;;              )
+
+;; (use-package dracula-theme
+;;              :ensure t
+;;              :init
+;;              :config
+;;              (load-theme 'dracula t)
+;;              )
 (use-package atom-one-dark-theme
              :ensure t
              :init
              :config
-             ;; (load-theme 'atom-one-dark t)
-             )
-
-
-
-(use-package dracula-theme
-             :ensure t
-             :init
-             :config
-             (load-theme 'dracula t)
+             (load-theme 'atom-one-dark t)
              )
 (use-package modern-cpp-font-lock
   :ensure t
@@ -56,8 +58,10 @@
   :init
   (add-hook 'after-init-hook 'global-company-mode)
   :config
-  (setq company-idle-delay 0)
+  (setq company-idle-delay 0.1)
   (setq company-show-numbers "on")
+  (define-key company-active-map "\C-n" 'company-select-next)
+  (define-key company-active-map "\C-p" 'company-select-previous)
   (use-package rtags :ensure t :pin melpa
     :config
     (setq rtags-autostart-diagnostics nil)
@@ -73,6 +77,10 @@
     )
   )
 (use-package dash
+  :ensure t
+  :init
+  )
+(use-package sr-speedbar
   :ensure t
   :init
   )
@@ -94,7 +102,7 @@
                        (use-package airline-themes
                          :ensure t
                                     :config
-                                    ;; (load-theme 'airline-cool)
+                                    (load-theme 'airline-dark t)
                                     )
                        ))
 (use-package tabbar
@@ -109,15 +117,18 @@
              )
 
 
+(use-package ivy
+             :ensure t
+             :init
+             :config
+             (ivy-mode)
+             )
+
 (use-package helm
              :ensure t
              :init
-             (use-package helm-swoop
-               :ensure t
-                          :init
-                          :config
-                          )
              :config
+             ;; (helm-mode)
              )
 ;; (use-package auto-complete
 ;;              :ensure t
@@ -184,6 +195,7 @@
               "1 sec" nil 'delete-windows-on
               (get-buffer-create "*compilation*"))
             (message "No Compilation Errors!")))))
+
 (setq inhibit-startup-message t)
 (setq initial-scratch-message "")
 (set-face-attribute 'default nil :height 160)
@@ -288,14 +300,18 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("aaffceb9b0f539b6ad6becb8e96a04f2140c8faa1de8039a343a4f1e009174fb" default)))
+    ("946e871c780b159c4bb9f580537e5d2f7dba1411143194447604ecbaf01bd90c" "adf5275cc3264f0a938d97ded007c82913906fc6cd64458eaae6853f6be287ce" "a0feb1322de9e26a4d209d1cfa236deaf64662bb604fa513cca6a057ddf0ef64" "3eb93cd9a0da0f3e86b5d932ac0e3b5f0f50de7a0b805d4eb1f67782e9eb67a4" "251348dcb797a6ea63bbfe3be4951728e085ac08eee83def071e4d2e3211acc3" "aaffceb9b0f539b6ad6becb8e96a04f2140c8faa1de8039a343a4f1e009174fb" default)))
  '(global-linum-mode t)
+ '(helm-mode nil)
+ '(ivy-mode t)
  '(package-selected-packages
    (quote
-    (company-rtags dash cmake-ide cmake-mode highlight-numbers modern-cpp-font-lock highlight-function-calls atom-theme dracula-theme auto-complete helm tabbar powerline xcscope company neotree evil alect-themes use-package)))
+    (sr-speedbar company-rtags dash cmake-ide cmake-mode highlight-numbers modern-cpp-font-lock highlight-function-calls atom-theme dracula-theme auto-complete helm tabbar powerline xcscope company neotree evil alect-themes use-package)))
+ '(recentf-mode t)
  '(safe-local-variable-values
    (quote
-    ((company-clang-arguments "-I/home/ksoo/hisdk/mpp/sample/ballbot/opencv/include" "-I/home/ksoo/hisdk/mpp/sample/ballbot/hiboost63/include" "-I/home/ksoo/hisdk/mpp/sample/common" "-I/home/ksoo/hisdk/mpp/include" "-I/home/ksoo/hisdk/mpp/sample/ballbot")
+    ((cmake-ide-cmakelists-dir . "./")
+     (company-clang-arguments "-I/home/ksoo/hisdk/mpp/sample/ballbot/opencv/include" "-I/home/ksoo/hisdk/mpp/sample/ballbot/hiboost63/include" "-I/home/ksoo/hisdk/mpp/sample/common" "-I/home/ksoo/hisdk/mpp/include" "-I/home/ksoo/hisdk/mpp/sample/ballbot")
      (company-clang-arguments "-I/home/ksoo/hisdk/mpp/sample/ballbot/opencv/include" "-I/home/ksoo/hisdk/mpp/sample/ballbot/hiboost63/include" "-I/home/ksoo/hisdk/mpp/sample/common" "-I/home/ksoo/hisdk/mpp/include")
      (company-clang-arguments "-I/home/<user>/hisdk/mpp/sample/ballbot/opencv/include" "-I/home/<user>/hisdk/mpp/sample/ballbot/hiboost63/include" "-I/home/<user>/hisdk/mpp/sample/common" "-I/home/<user>/hisdk/mpp/include")
      (company-clang-arguments "-I/home/<user>/hisdk/mpp/sample/ballbot/opencv/include" "-I/home/<user>/hisdk/mpp/sample/ballbot/hiboost63/include" "-I/home/<user>/hisdk/mpp/sample/common")))))
@@ -311,15 +327,18 @@
 ;; (define-key evil-normal-state-map (kbd "<down>") 'evil-window-decrease-height)
 (define-key evil-normal-state-map (kbd "C-.") 'rtags-find-symbol-at-point)
 (define-key evil-normal-state-map (kbd "C-,") 'rtags-find-references-at-point)
-(define-key evil-normal-state-map (kbd "C-t") 'rtags-location-stack-back)
+(define-key evil-normal-state-map (kbd "C-m") 'rtags-location-stack-back)
 (define-key evil-normal-state-map (kbd "[") 'evil-scroll-up)
 (define-key evil-normal-state-map (kbd "]") 'evil-scroll-down)
+(define-key evil-visual-state-map (kbd "[") 'evil-scroll-up)
+(define-key evil-visual-state-map (kbd "]") 'evil-scroll-down)
 (define-key evil-normal-state-map (kbd "0") 'evil-first-non-blank)
 (define-key evil-visual-state-map (kbd "0") 'evil-first-non-blank)
 (define-key evil-normal-state-map "_" 'comment-line)
 (define-key evil-visual-state-map "_" 'comment-dwim)
 (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
 (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
+(define-key evil-normal-state-map (kbd "C-S-b") 'cmake-ide-compile)
 (define-key evil-visual-state-map (kbd "j") 'evil-next-visual-line)
 (define-key evil-visual-state-map (kbd "k") 'evil-previous-visual-line)
 (global-set-key  (kbd "C-o") 'evil-jump-backward)
@@ -327,11 +346,13 @@
 (global-set-key  (kbd "C-j") 'tabbar-forward-tab)
 (global-set-key (kbd "C-h") 'evil-window-left)
 (global-set-key (kbd "C-l") 'evil-window-right)
+
 (global-set-key (kbd "C-<up>") 'evil-window-increase-height)
 (global-set-key (kbd "C-<down>") 'evil-window-decrease-height)
 (global-set-key (kbd "C-<right>") 'evil-window-increase-width)
 (global-set-key (kbd "C-<left>") 'evil-window-decrease-width)
-
+(global-set-key (kbd "C-x x") 'switch-to-buffer)
+(global-set-key (kbd "M-w") 'switch-to-buffer)
 
 
 (define-key evil-normal-state-map ";a" 'ff-find-other-file)
@@ -348,23 +369,13 @@
 (setq split-width-threshold 2)
 
 (set-default-font "Ubuntu Mono Bold")
+(setq default-frame-alist '((font . "Ubuntu Mono Bold")))
+
 ;; (set-default-font "Inconsolata")
 
 (defun nuke_traling ()
   (add-hook 'before-save-hook #'delete-trailing-whitespace nil t))
 (add-hook 'prog-mode-hook #'nuke_traling)
-
-
-
-
-
-
-
-
-
-
-
-
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -373,3 +384,5 @@
  ;; If there is more than one, they won't work right.
  )
 (put 'set-goal-column 'disabled nil)
+
+(setq-default frame-title-format '("%f [%m]"))
