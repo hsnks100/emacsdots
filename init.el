@@ -1,7 +1,9 @@
 ;; (add-hook 'after-init-hook 'global-color-identifiers-mode)
+;; alias e="emacsclient -q -n -c"
+;; alias et="emacsclient -q -t"
+
 
 ; from enberg on #emacs
-
 (require 'package)
 (add-to-list 'package-archives '("melpa stable" . "https://stable.melpa.org/packages/"))
 (add-to-list 'package-archives '("melpa china" . "http://elpa.emacs-china.org/melpa-stable/"))
@@ -10,9 +12,11 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
-
 (unless (package-installed-p 'use-package)
+  (package-refresh-contents)
   (package-install 'use-package))
+;; (unless (package-installed-p 'use-package)
+;;   (package-install 'use-package))
 
 (require 'use-package)
 
@@ -113,7 +117,7 @@
                    (lambda ()
                      (list "All")))
              ;; (setq *tabbar-ignore-buffers* '("*Help*" ".bbdb" "diary"))
-             (tabbar-mode)
+             ;; (tabbar-mode)
              )
 
 
@@ -198,8 +202,7 @@
 
 (setq inhibit-startup-message t)
 (setq initial-scratch-message "")
-(set-face-attribute 'default nil :height 160)
-(menu-bar-mode 1)
+(menu-bar-mode -1)
 (toggle-scroll-bar 1)
 (tool-bar-mode -1)
 (global-auto-revert-mode t)
@@ -207,6 +210,7 @@
 (setq default-input-method "korean-hangul390")
 (prefer-coding-system 'utf-8)
 (global-set-key (kbd "<Multi_key>") 'toggle-input-method)
+(global-set-key (kbd "<Hangul>") 'toggle-input-method)
 (defun under-comment (ARG)
   (interactive)
   (comment-dwim ARG))
