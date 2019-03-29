@@ -1,7 +1,8 @@
 ;; (add-hook 'after-init-hook 'global-color-identifiers-mode)
 ;; alias e="emacsclient -q -n -c"
 ;; alias et="emacsclient -q -t"
-
+(setq custom-file "~/.emacs-custom.el")
+(load custom-file)
 
 ; from enberg on #emacs
 (require 'package)
@@ -74,6 +75,7 @@
     (add-hook 'c-mode-hook 'rtags-start-process-unless-running)
     (add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
     (add-hook 'objc-mode-hook 'rtags-start-process-unless-running)
+    (define-key rtags-mode-map (kbd "<return>") 'rtags-select-other-window)
     (use-package company-rtags
       :ensure t
       :init
@@ -184,6 +186,7 @@
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (setq-default c-basic-offset 4)
 (setq-default indent-tabs-mode nil)
+(add-hook 'c++-mode-hook 'c-set-offset 'arglist-intro '+)
 
 (add-hook 'after-change-major-mode-hook
           (lambda ()
@@ -223,6 +226,10 @@
                ;; if we don't have this evil overwrites the cursor color
                (setq evil-default-cursor t)
                (setq evil-want-C-u-scroll t)
+               (use-package evil-surround
+                 :ensure t
+                 :config
+                 (global-evil-surround-mode 1))
 
 
                ;; leader shortcuts
@@ -297,28 +304,6 @@
 
 
   )
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("946e871c780b159c4bb9f580537e5d2f7dba1411143194447604ecbaf01bd90c" "adf5275cc3264f0a938d97ded007c82913906fc6cd64458eaae6853f6be287ce" "a0feb1322de9e26a4d209d1cfa236deaf64662bb604fa513cca6a057ddf0ef64" "3eb93cd9a0da0f3e86b5d932ac0e3b5f0f50de7a0b805d4eb1f67782e9eb67a4" "251348dcb797a6ea63bbfe3be4951728e085ac08eee83def071e4d2e3211acc3" "aaffceb9b0f539b6ad6becb8e96a04f2140c8faa1de8039a343a4f1e009174fb" default)))
- '(global-linum-mode t)
- '(helm-mode nil)
- '(ivy-mode t)
- '(package-selected-packages
-   (quote
-    (sr-speedbar company-rtags dash cmake-ide cmake-mode highlight-numbers modern-cpp-font-lock highlight-function-calls atom-theme dracula-theme auto-complete helm tabbar powerline xcscope company neotree evil alect-themes use-package)))
- '(recentf-mode t)
- '(safe-local-variable-values
-   (quote
-    ((cmake-ide-cmakelists-dir . "./")
-     (company-clang-arguments "-I/home/ksoo/hisdk/mpp/sample/ballbot/opencv/include" "-I/home/ksoo/hisdk/mpp/sample/ballbot/hiboost63/include" "-I/home/ksoo/hisdk/mpp/sample/common" "-I/home/ksoo/hisdk/mpp/include" "-I/home/ksoo/hisdk/mpp/sample/ballbot")
-     (company-clang-arguments "-I/home/ksoo/hisdk/mpp/sample/ballbot/opencv/include" "-I/home/ksoo/hisdk/mpp/sample/ballbot/hiboost63/include" "-I/home/ksoo/hisdk/mpp/sample/common" "-I/home/ksoo/hisdk/mpp/include")
-     (company-clang-arguments "-I/home/<user>/hisdk/mpp/sample/ballbot/opencv/include" "-I/home/<user>/hisdk/mpp/sample/ballbot/hiboost63/include" "-I/home/<user>/hisdk/mpp/sample/common" "-I/home/<user>/hisdk/mpp/include")
-     (company-clang-arguments "-I/home/<user>/hisdk/mpp/sample/ballbot/opencv/include" "-I/home/<user>/hisdk/mpp/sample/ballbot/hiboost63/include" "-I/home/<user>/hisdk/mpp/sample/common")))))
 
 
 ;; alias e="emacsclient -q -n -c"
@@ -357,6 +342,7 @@
 (global-set-key (kbd "C-<left>") 'evil-window-decrease-width)
 (global-set-key (kbd "C-x x") 'switch-to-buffer)
 (global-set-key (kbd "M-w") 'switch-to-buffer)
+(global-set-key (kbd "M-w") 'switch-to-buffer)
 
 
 (define-key evil-normal-state-map ";a" 'ff-find-other-file)
@@ -372,8 +358,6 @@
       scroll-preserve-screen-position 1)
 (setq split-width-threshold 2)
 
-(set-default-font "Ubuntu Mono Bold")
-(setq default-frame-alist '((font . "Ubuntu Mono Bold")))
 
 ;; (set-default-font "Inconsolata")
 
@@ -381,12 +365,12 @@
   (add-hook 'before-save-hook #'delete-trailing-whitespace nil t))
 (add-hook 'prog-mode-hook #'nuke_traling)
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
 (put 'set-goal-column 'disabled nil)
 
 (setq-default frame-title-format '("%f [%m]"))
+;; (set-default-font "Ubuntu Mono Bold")
+;; (set-face-attribute 'default nil :font "Ubuntu Mono Bold") ;;  :height 160)
+(set-frame-font "Ubuntu Mono Bold" nil t)
+(set-face-attribute 'default nil :height 160)
+
+(setq default-frame-alist '((font . "Ubuntu Mono Bold")))
